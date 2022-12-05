@@ -30,8 +30,8 @@ class update_window(QDialog):
         self.resize(620, 380)
 
         # 绑定按钮事件
-        self.ui.pushButton_azgx.clicked.connect(self.安装更新)
-        self.ui.pushButton_gfwz.clicked.connect(self.打开官方网址)
+        self.ui.pushButton_azgx.clicked.connect(self.update)
+        self.ui.pushButton_gfwz.clicked.connect(self.open_web)
         self.ui.pushButton_tgbb.clicked.connect(self.close)
         self.ui.pushButton_ok.clicked.connect(self.close)
 
@@ -101,7 +101,7 @@ class update_window(QDialog):
                 编辑框=self.ui.label_zt,
                 进度条=self.ui.progressBar,
                 应用名称=self.app_name,
-                回调函数=self.下载完成,
+                回调函数=self.download_finish,
             )
             self.download_thread.start()
 
@@ -118,11 +118,11 @@ class update_window(QDialog):
                 编辑框=self.ui.label_zt,
                 进度条=self.ui.progressBar,
                 应用名称=self.app_name,
-                回调函数=self.下载完成
+                回调函数=self.download_finish
             )
             self.download_thread.start()
 
-    def dowload_finish(self, res, save_path):
+    def download_finish(self, res, save_path):
         if not res:
             self.ui.label_zt.setText("下载更新失败")
             return

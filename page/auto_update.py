@@ -13,8 +13,9 @@ import sys
 
 from PySide2 import QtCore
 from PySide2.QtCore import QThread
-from zip_command import unzip_command2, zip_command2
-from download_model import download_file, download_proccess_bar
+from page.zip_command import unzip_command2, zip_command2
+from page.download_model import download_file, download_proccess_bar
+from page.auto_get_version import get_new_version_and_download_path
 
 
 def get_window_path():
@@ -127,7 +128,7 @@ class download_thread(QThread):
         self.app_name = kwargs.get('应用名称')
         self.return_func = kwargs.get('回调函数')
 
-        self.proccess_signal.connect(self.refresh)
+        self.process_signal.connect(self.refresh)
         # 绑定线程开始事件
         self.started.connect(self.ui_start)
         # 绑定线程结束事件
@@ -173,9 +174,10 @@ class check_update_thread(QThread):
         self.finished.connect(self.ui_end)
         self.project_name = project_name
         self.return_func = return_func
+        self.data = None
 
     def run(self):
-        data = 获取最新版本号和下载地址(self.project_name)
+        data = get_new_version_and_download_path(self.project_name)
         self.data = data
 
     def ui_start(self):
@@ -185,4 +187,4 @@ class check_update_thread(QThread):
     def ui_end(self):
         # data = json.dumps(self.数据, indent=4, ensure_ascii=False)
         # print("检查更新结果", data)
-        self.回调函数(self.数据)
+        self.return_func(self.data)
